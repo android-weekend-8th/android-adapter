@@ -5,6 +5,9 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.rathana.android_adapter.adapter.SongListAdapter;
+import com.rathana.android_adapter.entity.Song;
+
 import java.util.ArrayList;
 import java.util.List;
 

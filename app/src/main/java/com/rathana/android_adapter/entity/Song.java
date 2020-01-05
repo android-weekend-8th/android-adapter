@@ -1,4 +1,4 @@
-package com.rathana.android_adapter;
+package com.rathana.android_adapter.entity;
 
 public class Song {
 
