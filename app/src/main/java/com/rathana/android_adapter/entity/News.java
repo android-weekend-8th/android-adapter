@@ -1,11 +1,48 @@
 package com.rathana.android_adapter.entity;
 
-public class News {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class News implements Parcelable {
 
     private int thumbnail;
     private String title;
     private String date;
     private String author;
+
+    public News() { }
+
+    protected News(Parcel in) {
+        thumbnail = in.readInt();
+        title = in.readString();
+        date = in.readString();
+        author = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(thumbnail);
+        dest.writeString(title);
+        dest.writeString(date);
+        dest.writeString(author);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<News> CREATOR = new Creator<News>() {
+        @Override
+        public News createFromParcel(Parcel in) {
+            return new News(in);
+        }
+
+        @Override
+        public News[] newArray(int size) {
+            return new News[size];
+        }
+    };
 
     public int getThumbnail() {
         return thumbnail;
@@ -37,5 +74,15 @@ public class News {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    @Override
+    public String toString() {
+        return "News{" +
+                "thumbnail=" + thumbnail +
+                ", title='" + title + '\'' +
+                ", date='" + date + '\'' +
+                ", author='" + author + '\'' +
+                '}';
     }
 }
