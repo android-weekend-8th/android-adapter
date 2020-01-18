@@ -9,14 +9,17 @@ public class News implements Parcelable {
     private String title;
     private String date;
     private String author;
+    private String imagePath;
 
-    public News() { }
+    public News() {
+    }
 
     protected News(Parcel in) {
         thumbnail = in.readInt();
         title = in.readString();
         date = in.readString();
         author = in.readString();
+        imagePath = in.readString();
     }
 
     @Override
@@ -25,6 +28,7 @@ public class News implements Parcelable {
         dest.writeString(title);
         dest.writeString(date);
         dest.writeString(author);
+        dest.writeString(imagePath);
     }
 
     @Override
@@ -84,5 +88,13 @@ public class News implements Parcelable {
                 ", date='" + date + '\'' +
                 ", author='" + author + '\'' +
                 '}';
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }
