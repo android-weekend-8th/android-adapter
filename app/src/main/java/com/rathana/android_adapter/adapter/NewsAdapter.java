@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     boolean canLoadMore = false;
 
 
-    private static final int PROGRESS_ITEM_TYPE = 0;
-    private static final int NEWS_ITEM_TYPE = 1;
+    private static final int PROGRESS_ITEM_TYPE = -1;
+    private static final int NEWS_ITEM_TYPE = -2;
 
 
     public NewsAdapter(Context context, List<News> newsList) {
@@ -44,7 +45,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (canLoadMore)
+        if (!canLoadMore)
             return newsList.size() + 1;
         else
             return newsList.size();
@@ -52,6 +53,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
+        Log.e("Adapter","items size "+newsList.size());
+        Log.e("Adapter","position "+position);
         if (position < newsList.size())
             return NEWS_ITEM_TYPE;
         else
@@ -61,13 +64,15 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = null;
         if (viewType == NEWS_ITEM_TYPE) {
-            view = LayoutInflater.from(parent.getContext())
+            Log.e("Adapter","inflate item layout");
+            View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_news, parent, false);
             return new ViewHolder(view);
         } else if (viewType == PROGRESS_ITEM_TYPE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_load_more_item, parent, false);
+            Log.e("Adapter","inflate Progress");
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.layout_load_more_item, parent, false);
             return new LoadMoreViewHolder(view);
         }
 
@@ -109,8 +114,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (listener != null)
                     listener.onUpdate(news, holder.getAdapterPosition());
             });
+            Log.e("Adapter","item layout");
         } else {
             //load more viewHolder
+            Log.e("Adapter","Progress");
         }
 
     }
@@ -158,7 +165,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void addMOreItems(List<News> news) {
         int previousItems = newsList.size();
         newsList.addAll(news);
-        notifyItemRangeInserted(previousItems, newsList.size());
+        notifyItemRangeInserted(previousItems, news.size());
     }
 }
 

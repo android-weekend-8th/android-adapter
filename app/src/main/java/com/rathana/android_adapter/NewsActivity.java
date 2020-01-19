@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,6 +32,13 @@ public class NewsActivity extends AppCompatActivity
     private boolean isLoadMore = true;
     LoadMoreLinearLayoutManager layoutManager;
 
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            getMoreItems();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +49,6 @@ public class NewsActivity extends AppCompatActivity
 
         getNews();
         setupRecyclerView();
-        getMoreItems();
 
         buttonCreateNews.setOnClickListener(v -> {
             Intent intent = new Intent(this, CreateNewsActivity.class);
@@ -50,7 +57,7 @@ public class NewsActivity extends AppCompatActivity
     }
 
     private void getNews() {
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 10; i++) {
             News news = new News();
             news.setThumbnail(R.drawable.image);
             news.setTitle("Title " + i);
@@ -62,37 +69,34 @@ public class NewsActivity extends AppCompatActivity
 
     private void getMoreItems() {
         List<News> newsSubList = new ArrayList<>();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 25; i++) {
-                    News news = new News();
-                    news.setThumbnail(R.drawable.image);
-                    news.setTitle("Title " + i);
-                    news.setDate("04/01/2020");
-                    news.setAuthor("Dong Dara");
-                    newsSubList.add(news);
-                }
-                adapter.addMOreItems(newsSubList);
-                adapter.setCanLoadMore(true);
-                layoutManager.loadingFinished();
-            }
-
-        }, 1000);
+        for (int i = 0; i < 10; i++) {
+            News news = new News();
+            news.setThumbnail(R.drawable.image);
+            news.setTitle("Title " + i);
+            news.setDate("04/01/2020");
+            news.setAuthor("Dong Dara");
+            newsSubList.add(news);
+        }
+        adapter.addMOreItems(newsSubList);
+        adapter.setCanLoadMore(true);
+        layoutManager.loadingFinished();
     }
+
 
     private void setupRecyclerView() {
 
         adapter = new NewsAdapter(this, newsList);
-        adapter.setCanLoadMore(false);
-        layoutManager = new LoadMoreLinearLayoutManager(this);
+        layoutManager = new LoadMoreLinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
+        //layoutManager=new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        adapter.setCanLoadMore(true);
         layoutManager.setLoadMOreListener(new LoadMoreLinearLayoutManager.OnLoadMOreListener() {
             @Override
             public void onLoadMore() {
                 //add load more items
-                getMoreItems();
+                adapter.setCanLoadMore(true);
+                new Handler().postDelayed(runnable,500);
             }
         });
         layoutManager.loadingFinished();

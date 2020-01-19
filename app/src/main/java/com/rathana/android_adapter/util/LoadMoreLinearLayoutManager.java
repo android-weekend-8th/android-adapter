@@ -45,6 +45,10 @@ public class LoadMoreLinearLayoutManager extends LinearLayoutManager {
         super(context);
     }
 
+    public LoadMoreLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+        super(context, orientation, reverseLayout);
+    }
+
     @Override
     public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
 
